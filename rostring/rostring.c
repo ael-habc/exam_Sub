@@ -1,35 +1,40 @@
+#include <stdlib.h>
 #include <unistd.h>
-int ft_isblank(char c)
+#include <stdio.h>
+int ftspace(char c)
 {
-	return(c == ' ' || c == '\t');
+    return (c == ' ' || c == '\t') ? 1 : 0;
 }
-void rostring(char *s)
+void rostring(char *str)
 {
-	int wordlen = 0, i = 0;
-	
-	while(s[i])
-	{
-		while (s[i] && ft_isblank(s[i]))
-			i++;
-		if (wordlen == 0)
-			while(s[i] && !ft_isblank(s[i++]))
-				wordlen++;
-		else
-		{
-			while(s[i] && write(1,&s[i++],1));
-			write(1, " ", 1);
-		}
-	}
-	i = 0;
-	while(ft_isblank(s[i]))
-		i++;
-	while(wordlen--)
-		write(1,&s[i++],1);
+    int i = 0, j = 0;
+    while (str[i] && ftspace(str[i]))
+        i++;
+    j = i;
+    while (str[i] && !ftspace(str[i]))
+        i++;
+    while (str[i])
+    {
+        if(!ftspace(str[i]) && ftspace(str[i-1]) && str[i])
+        {
+            while (str[i] && !ftspace(str[i]))
+            {
+                write(1,&str[i++],1);
+            }
+            write(1," ",1);
+        }
+        i++;
+    }
+    while(str[j] && !ftspace(str[j]))
+    {
+        write(1,&str[j],1);
+        j++;
+    }
 }
-int		main(int ac, char **av)
+int main(int ac, char **av)
 {
-	if (ac > 1 && *av[1])
-		rostring(av[1]);
-	write(1, "\n", 1);
-	return (0);
+    
+    if (ac == 2)
+        rostring(av[1]);
+    write(1,"\n",1);
 }

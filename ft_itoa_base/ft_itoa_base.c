@@ -1,42 +1,47 @@
 #include <stdlib.h>
 #include <stdio.h>
-char *ft_itoa_base(int value, int base)
+int ft_nbrlen(int n,int base)
 {
-    char *s;
-    unsigned long nb;
-    unsigned long n;
-    int i= 0;
+    int i = 0;
+    while (n)
+    {
+        n /= base;
+        i++;
+    }
+    return i;
+
+}
+char	*ft_itoa_base(int value, int base)
+{
+    if (base < 2 || base > 16)
+        return(0);
+    unsigned int nb;
+    int i = 0;
     int count = 0;
-    int sign = 0;
+    char *str;
     nb = value;
+    if (value == 0)
+        return ("0");
+    
     if (value < 0)
     {
         nb *= -1;
         if (base == 10)
-        {
             count++;
-            sign = -1;
-        }
     }
-    n = nb;
-    while(nb)
-    {
-        count++;
-        nb /= base;
-    }
-    s = malloc(sizeof(char) * count + 1);
+    count = ft_nbrlen(nb,base);
+    str = malloc(sizeof(char) * count + 1);
+    str[count] = '\0';
     i = count;
-    s[count] = '\0';
     while (i--)
     {
-        s[i] = (n % base < 10) ? n % base + '0' : n % base + 'A' - 10;
-        n /= base;
+        str[i] = (nb % base <= 10) ? (nb % base + 'A' - 10) : (nb % base + '0');
+        nb/= base;
     }
-    (sign == -1) ? s[0] = '-' : 0; 
-    return (s);
+    str[0] = (value < 0 && base == 10) ? '-' : str[0];
+    return str;
 }
-int main(int ac , char **av)
+int main()
 {
-    printf("%s",ft_itoa_bahse(atoi(av[1]), atoi(av[2])));
-    return(0);
+    printf("%s",ft_itoa_base(0,1));
 }
